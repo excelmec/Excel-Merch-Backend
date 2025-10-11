@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
 import { BadRequestError, NotFoundError } from '../utils/error';
-import { ShippingStatus } from '@prisma/client';
+import { SelfpickupStatus, ShippingStatus } from '@prisma/client';
 import { sendShippingStartedMail } from '../utils/mailer';
 import { razorpay } from '../utils/razorpay';
 
 interface UpdateShippingStatusRequest {
-	shippingStatus: ShippingStatus;
+	selfpickupStatus?: SelfpickupStatus;
+	shippingStatus?: ShippingStatus;
 	trackingId?: string;
 }
 
@@ -22,7 +23,7 @@ export async function updateOrderStatus(
 	next: NextFunction
 ) {
 	const orderId = req.params.orderId;
-	const { shippingStatus, trackingId } = req.body;
+	const { selfpickupStatus, shippingStatus, trackingId } = req.body;
 
 	try {
 		const order = await prisma.order.findUnique({
@@ -36,10 +37,39 @@ export async function updateOrderStatus(
 			throw new NotFoundError('Order not found');
 		}
 
-		/**
-		 * Only allow updating shipping status when order status is confirmed
-		 */
-		if (
+		
+		if (order.isSelfPickup) {
+			// logic for self pickup orders 
+  			if (!selfpickupStatus) {
+  			  throw new BadRequestError('selfpickupStatus is required for self-pickup orders');
+  			}
+		
+  			/**
+		 		* Only allow updating shipping status when order status is confirmed
+		 	*/
+  			if (
+  			  order.orderStatus !== 'order_confirmed' ||
+  			  order.paymentStatus !== 'payment_received'
+  			) {
+  			  throw new BadRequestError(
+  			    'Order status must be confirmed and payment must be received to update self-pickup status'
+  			  );
+  			}
+			// update selfpickup status
+  			const updatedOrder = await prisma.order.update({
+  			  where: { orderId },
+  			  data: { selfpickupStatus: selfpickupStatus },
+  			});
+		
+  			return res.status(200).json({
+  			  order: updatedOrder,
+  			  message: 'Self-pickup status updated successfully',
+  			});
+		} else {
+			/**
+		 		* Only allow updating shipping status when order status is confirmed
+		 	*/
+			if (
 			order.orderStatus !== 'order_confirmed' ||
 			order.paymentStatus !== 'payment_received'
 		) {
@@ -71,11 +101,13 @@ export async function updateOrderStatus(
 				trackingId,
 			},
 		});
-
+		
 		return res.status(200).json({
 			order: updatedOrder,
 			message: 'Order status updated successfully',
 		});
+		}
+		
 	} catch (err) {
 		next(err);
 	}

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
 import { BadRequestError, NotFoundError } from '../utils/error';
 import { razorpay } from '../utils/razorpay';
-import { OrderStatus, PaymentStatus, ShippingStatus } from '@prisma/client';
+import { OrderStatus, PaymentStatus, SelfpickupStatus, ShippingStatus } from '@prisma/client';
 
 export async function getOrders(
 	req: Request,
@@ -118,56 +118,60 @@ export async function getOrder(
 		next(err);
 	}
 }
-
 export async function cancelOrder(
-	req: Request<{ orderId: string }>,
-	res: Response,
-	next: NextFunction
+  	req: Request<{ orderId: string }>,
+  	res: Response,
+  	next: NextFunction
 ) {
-	try {
-		const decodedUser = req.decodedToken!;
-		const orderId = req.params.orderId;
+  	try {
+    	const decodedUser = req.decodedToken!;
+    	const orderId = req.params.orderId;
 
-		if (!orderId) {
-			throw new BadRequestError('Order ID not provided');
-		}
+    	if (!orderId) {
+      	throw new BadRequestError("Order ID not provided");
+    	}
 
-		const order = await prisma.order.findFirst({
-			where: {
-				orderId: orderId,
-				userId: decodedUser.user_id,
-			},
-		});
+    	const order = await prisma.order.findFirst({
+      	where: {
+        	orderId: orderId,
+        	userId: decodedUser.user_id,
+      	},
+    	});
 
-		if (!order) {
-			throw new NotFoundError('Order not found');
-		}
+    	if (!order) {
+      	throw new NotFoundError("Order not found");
+    	}
 
-		if (
-			order.paymentStatus === PaymentStatus.payment_pending &&
-			order.shippingStatus === ShippingStatus.not_shipped &&
-			order.orderStatus === OrderStatus.order_unconfirmed
-		) {
-			await prisma.order.update({
-				where: {
-					orderId: orderId,
-				},
-				data: {
-					orderStatus: OrderStatus.order_cancelled_by_user,
-				},
-			});
+    	// checking order status and payment status to allow cancellation 
+    	if (
+      	(order.isPreorder && order.orderStatus === OrderStatus.pre_ordered) ||
+      	(
+      	  	order.paymentStatus === PaymentStatus.payment_pending &&
+      	  	order.orderStatus === OrderStatus.order_unconfirmed &&
+      	  	(
+      	  	  (!order.isSelfPickup &&
+      	  	    order.shippingStatus === ShippingStatus.not_shipped) ||
+      	  	  (order.isSelfPickup &&
+      	  	    order.selfpickupStatus === SelfpickupStatus.not_ready_for_pickup)
+      	  	)
+      	)
+     	) {
+      	await prisma.order.update({
+        	where: { orderId },
+        	data: { orderStatus: OrderStatus.order_cancelled_by_user },
+      	});
 
-			return res.status(200).json({ message: 'Order cancelled' });
-		}
+      	return res.status(200).json({ message: "Order cancelled" });
+    	}
 
-		return res.status(400).json({
-			message:
-				'Order cannot be cancelled for current order, payment and shipping status',
-			orderStatus: order.orderStatus,
-			paymentStatus: order.paymentStatus,
-			shippingStatus: order.shippingStatus,
-		});
-	} catch (err) {
-		next(err);
-	}
+    	return res.status(400).json({
+      	message:
+        "Order cannot be cancelled for current order, payment and shipping status",
+      	orderStatus: order.orderStatus,
+      	paymentStatus: order.paymentStatus,
+      	shippingStatus: order.shippingStatus,
+    	});
+  	} catch (err) {
+    next(err);
+  	}
 }

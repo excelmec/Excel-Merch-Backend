@@ -10,6 +10,7 @@ import { adminRouter } from './routes/Admin/AdminRoutes';
 import localtunnel from 'localtunnel';
 import { webhookRouter } from './routes/Webhook/webhook';
 import { logger } from './utils/logger';
+import { cartRouter } from './routes/User/CartRoutes';
 
 const app = express();
 app.use(express.json());
@@ -44,9 +45,10 @@ app.use('/user', userRouter);
 app.use('/item', itemRouter);
 app.use('/admin', adminRouter);
 app.use('/webhook', webhookRouter);
+app.use('/cart' , cartRouter);
 
-app.use('*', () => {
-	throw new NotFoundError('Route not found');
+app.use((req, res, next) => {
+  next(new NotFoundError(`Route ${req.originalUrl} not found`));
 });
 
 app.use(errorHandler);

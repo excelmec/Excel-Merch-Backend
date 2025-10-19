@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../utils/prisma';
-
+import { adjustPreorders } from '../utils/adjustPreorder';
 import { MediaObject, Size, stockCount } from '@prisma/client';
 import { storageBucket } from '../utils/storage';
 import { v4 as uuidv4 } from 'uuid';
@@ -339,6 +339,7 @@ export async function updateItemController(
 				});
 			}),
 		]);
+		await adjustPreorders(itemId);
 
 		/**
 		 * Upload the new files to GCS

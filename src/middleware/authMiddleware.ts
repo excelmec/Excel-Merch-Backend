@@ -113,5 +113,3 @@ export function isMerchOrderManager(req: Request, res: Response, next: NextFunct
 
 	return next();
 }
-
-

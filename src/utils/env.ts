@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 if (!process.env.PORT) {
-	console.log('PORT not set in env, using default 4000');
+	console.log('PORT not set in env, using default 5000');
 }
-export const PORT = parseInt(process.env.PORT || '4000');
+export const PORT = parseInt(process.env.PORT || '5000');
 
 if (!process.env.JWT_SECRET_KEY) {
 	console.error('fatal: JWT_SECRET_KEY not set in env');

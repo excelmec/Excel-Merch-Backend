@@ -95,7 +95,7 @@ export async function createNewItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObject.id,
           itemId: itemId,
-          url: `https://storage.googleapis.com/${storageBucket.name}/${itemId}/${mediaObject.id}`,
+          url: `https://storage.googleapis.com/merch/item/${storageBucket.name}/${itemId}/${mediaObject.id}`,
         })
       );
       const mediaObjectsCreateRes = await prismaTxClient.mediaObject.createMany(
@@ -123,7 +123,7 @@ export async function createNewItemController(
     for (const mediaFile of mediaFiles) {
       uploadPromises.push(
         storageBucket
-          .file(`${newItem.id}/${mediaFile.originalname}`)
+          .file(`merch/item/${newItem.id}/${mediaFile.originalname}`)
           .save(mediaFile.buffer, {
             contentType: mediaFile.mimetype,
           })
@@ -193,7 +193,7 @@ export async function updateItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObjectId,
           // itemId: itemId,
-          url: `https://storage.googleapis.com/${storageBucket.name}/${itemId}/${mediaObjectId}`,
+          url: `https://storage.googleapis.com/merch/item/${storageBucket.name}/${itemId}/${mediaObjectId}`,
         });
 
         const mediaFileIndex = mediaFiles.findIndex(
@@ -213,7 +213,7 @@ export async function updateItemController(
       mediaObjectsToUpdate.push({
         id: oldItemMediaObject.id,
         itemId: itemId,
-        url: `https://storage.googleapis.com/${storageBucket.name}/${itemId}/${mediaObject.fileName}`,
+        url: `https://storage.googleapis.com/merch/item/${storageBucket.name}/${itemId}/${mediaObject.fileName}`,
 
         colorOption: mediaObject.colorOption,
         type: mediaObject.type,
@@ -347,7 +347,7 @@ export async function updateItemController(
 
       uploadDeletePromises.push(
         storageBucket
-          .file(`${itemId}/${mediaObjectToCreate.id}`)
+          .file(`merch/item/${itemId}/${mediaObjectToCreate.id}`)
           .save(mediaFile.buffer, {
             contentType: mediaFile.mimetype,
           })
@@ -356,7 +356,9 @@ export async function updateItemController(
 
     for (const mediaObjectToDelete of mediaObjectsToDelete) {
       uploadDeletePromises.push(
-        storageBucket.file(`${itemId}/${mediaObjectToDelete.id}`).delete()
+        storageBucket
+          .file(`merch/item/${itemId}/${mediaObjectToDelete.id}`)
+          .delete()
       );
     }
 

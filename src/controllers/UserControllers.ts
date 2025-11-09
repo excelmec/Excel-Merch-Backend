@@ -75,29 +75,30 @@ export async function getProfileController(
 			},
 		});
 
-		if (!user) {
-			const newUser = await prisma.user.create({
-				data: {
-					id: decodedUser.user_id,
-					name: decodedUser.name,
-					email: decodedUser.email,
-				},
-				include: {
-					address: true,
-					cartItems: true,
-					orders: true,
-				},
-			});
-			return res.status(200).json({
-				message: 'User Profile created and returned',
-				picture: decodedUser.picture,
-				...newUser,
-			});
-		}
+		const userData = user
+			? user
+			: await prisma.user.create({
+					data: {
+						id: decodedUser.user_id,
+						name: decodedUser.name,
+						email: decodedUser.email,
+					},
+					include: {
+						address: true,
+						cartItems: true,
+						orders: true,
+					},
+			  });
+
+		const { address, ...rest } = userData;
+
+		const addresses = address ? [address] : [];
 
 		return res.status(200).json({
 			picture: decodedUser.picture,
-			...user,
+			...rest,
+			address: addresses,
+			...( !user && { message: 'User profile created and returned' } ),
 		});
 	} catch (err) {
 		next(err);

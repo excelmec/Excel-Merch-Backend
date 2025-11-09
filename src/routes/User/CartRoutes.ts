@@ -47,15 +47,24 @@ cartRouter.get("/", isAuthenticated, getUserCartItems);
  *           schema:
  *             type: object
  *             properties:
- *               productId:
- *                 type: string
- *                 description: ID of the product to add
+ *               itemId:
+ *                 type: integer
+ *                 description: ID of the item to add (must be an integer)
  *               quantity:
  *                 type: integer
- *                 description: Quantity of the product to add
+ *                 description: Quantity of the item to add (must be > 0)
+ *               colorOption:
+ *                 type: string
+ *                 description: Color option of the item
+ *               sizeOption:
+ *                 type: string
+ *                 enum: [S, M, L, XL, XXL]
+ *                 description: Size option of the item (must be one of the allowed sizes)
  *             required:
- *               - productId
+ *               - itemId
  *               - quantity
+ *               - colorOption
+ *               - sizeOption
  *     responses:
  *       '200':
  *         description: Item added successfully

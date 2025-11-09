@@ -168,7 +168,7 @@ export async function getOrderAdmin(
 				additionalCharges: true,
 				user: {
 					include: {
-						address: true,
+						addresses: true,
 					},
 				},
 			},

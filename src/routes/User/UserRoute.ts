@@ -3,6 +3,7 @@ import { isAuthenticated } from "../../middleware/authMiddleware";
 import {
   getProfileController,
   updateProfileController,
+  deleteAddressController
 } from "../../controllers/UserControllers";
 import { cartRouter } from "./CartRoutes";
 import {
@@ -53,6 +54,24 @@ userRouter.post(
   isAuthenticated,
   updateProfileValidator,
   updateProfileController
+);
+
+/**
+ * @swagger
+ * /user/profile/address/{addressId}:
+ *   delete:
+ *     summary: Delete a specific address of the authenticated user
+ *     tags: [User]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Success
+ */
+userRouter.delete(
+  "/profile/address/:addressId",
+  isAuthenticated,
+  deleteAddressController
 );
 
 userRouter.use("/cart", cartRouter);

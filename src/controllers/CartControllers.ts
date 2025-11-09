@@ -19,6 +19,7 @@ import { Orders } from "razorpay/dist/types/orders";
 interface SelfPickupRequest {
   selfPickup: boolean;
   isPreorder: boolean; //isPreorder flag to bypass stock check for pre-order items and set appropriate status
+  addressId: number;
 }
 export async function getUserCartItems(
   req: Request,
@@ -264,11 +265,11 @@ export async function checkoutController(
 ) {
   try {
     const decodedUser = req.decodedToken!;
-    const { selfPickup, isPreorder } = req.body;
+    const { selfPickup, isPreorder, addressId } = req.body;
     const userProfile = await prisma.user.findUnique({
       where: { id: decodedUser.user_id },
       include: {
-        address: true,
+        addresses: true,
         cartItems: {
           include: {
             item: true,
@@ -282,7 +283,7 @@ export async function checkoutController(
       throw new BadRequestError("Create profile first");
     }
 
-    if (!userProfile.address && !selfPickup) {
+    if (!selfPickup && (!userProfile.addresses || userProfile.addresses.length === 0)) {
       throw new BadRequestError("Add address first");
     }
 
@@ -290,14 +291,32 @@ export async function checkoutController(
       throw new BadRequestError("Cart is empty");
     }
 
+    /**
+     * Get the selected address using the addressId from request body
+     */
+    let selectedAddress = null;
+
+    if (!selfPickup) {
+      selectedAddress = userProfile.addresses.find(
+        (addr) => addr.id === addressId
+      );
+
+      if (!selectedAddress) {
+        throw new BadRequestError("Selected address not found for this user");
+      }
+    }
+
     // TODO: Make better address format
-    const orderAddress = `
-${userProfile.address?.house},
-${userProfile.address?.area},
-${userProfile.address?.city},
-${userProfile.address?.state}
-${userProfile.address?.zipcode}
-`;
+    const orderAddress = selfPickup
+      ? "SELF PICKUP"
+      : `
+      ${selectedAddress?.house},
+      ${selectedAddress?.area},
+      ${selectedAddress?.city},
+      ${selectedAddress?.state}
+      ${selectedAddress?.zipcode}
+      `;
+
 
     /**
      * Check if any items were deleted by admin after user added them to cart

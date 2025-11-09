@@ -14,6 +14,12 @@ const updateProfileValidators = [
     .isObject()
     .withMessage('Address must be an object'),
 
+    body('address.phoneNumber')
+    .exists()
+    .withMessage('Phone number for each address is required')
+    .isString()
+    .withMessage('Phone number must be a string'),
+
     body('address.city')
     .exists()
     .withMessage('City is required')

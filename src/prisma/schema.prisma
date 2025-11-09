@@ -25,16 +25,17 @@ model User {
 }
 
 model Address {
-  id   Int    @id @default(autoincrement())
-  city String
+  id          Int    @id @default(autoincrement())
+  
+  phoneNumber String?
+  city        String
+  house       String
+  area        String
+  zipcode     String
+  state       String
 
-  house   String
-  area    String
-  zipcode String
-  state   String
-
-  user   User @relation(fields: [userId], references: [id]) // 
-  userId Int
+  user        User @relation(fields: [userId], references: [id]) // 
+  userId      Int
 
   cartItems CartItem[]
 }

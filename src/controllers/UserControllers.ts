@@ -17,6 +17,18 @@ export async function updateProfileController(
 	const decodedUser = req.decodedToken!;
 
 	try {
+		const newAddress = address.id
+			? await prisma.address.update({
+					where: { id: address.id },
+					data: address,
+				})
+			: await prisma.address.create({
+					data: {
+						...address,
+						userId: decodedUser.user_id,
+					},
+    });
+
 		const newUser = await prisma.user.upsert({
 			where: { id: decodedUser.user_id },
 			update: {
@@ -34,22 +46,10 @@ export async function updateProfileController(
 			},
 		});
 
-		const newAddress = address.id
-			? await prisma.address.update({
-					where: { id: address.id },
-					data: address,
-				})
-			: await prisma.address.create({
-					data: {
-						...address,
-						userId: decodedUser.user_id,
-					},
-    });
-
 		return res.json({
 			user: {
 				...newUser,
-				address: newAddress,
+				address: newAddress
 			},
 		});
 	} catch (err) {

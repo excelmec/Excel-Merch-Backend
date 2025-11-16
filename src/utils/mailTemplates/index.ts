@@ -93,3 +93,35 @@ export async function getShippingStartedHTML(
 
 	return html;
 }
+
+export async function getDeliveredConfirmationHTML(
+	userName: string,
+	orderId: string,
+	trackingId?: string
+) {
+	const bodyTextRow1 = `<p style="font-size: 14px; line-height: 170%;">Your order with id ${orderId} has been delivered successfully 🎉</p>`;
+
+	const bodyTextRow2 = trackingId
+		? `<p style="font-size: 14px; line-height: 170%;">Tracking ID: ${trackingId}</p>`
+		: '';
+
+	const mainHeader = `Your Order Has Been Delivered`;
+	const dateText = new Date().toLocaleString('en-IN', {
+		timeZone: 'Asia/Kolkata',
+		day: 'numeric',
+		month: 'short',
+		year: 'numeric',
+	});
+	const bodyHeader = `Hi ${userName}!`;
+	const bodyText = `${bodyTextRow1}\n${bodyTextRow2}`;
+
+	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
+
+	const html = rawHtml
+		.replace('{{MAIN_HEADER}}', mainHeader)
+		.replace('{{DATE}}', dateText)
+		.replace('{{BODY_HEADER}}', bodyHeader)
+		.replace('{{BODY_TEXT}}', bodyText);
+
+	return html;
+}

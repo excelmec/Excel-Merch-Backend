@@ -95,7 +95,7 @@ export async function createNewItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObject.id,
           itemId: itemId,
-          url: `https://storage.googleapis.com/merch/item/${storageBucket.name}/${itemId}/${mediaObject.id}`,
+          url: `https://storage.googleapis.com/${storageBucket.name}/merch/item/${itemId}/${mediaObject.id}`,
         })
       );
       const mediaObjectsCreateRes = await prismaTxClient.mediaObject.createMany(
@@ -193,7 +193,7 @@ export async function updateItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObjectId,
           // itemId: itemId,
-          url: `https://storage.googleapis.com/merch/item/${storageBucket.name}/${itemId}/${mediaObjectId}`,
+          url: `https://storage.googleapis.com/${storageBucket.name}/merch/item/${itemId}/${mediaObjectId}`,
         });
 
         const mediaFileIndex = mediaFiles.findIndex(
@@ -213,7 +213,7 @@ export async function updateItemController(
       mediaObjectsToUpdate.push({
         id: oldItemMediaObject.id,
         itemId: itemId,
-        url: `https://storage.googleapis.com/merch/item/${storageBucket.name}/${itemId}/${mediaObject.fileName}`,
+        url: `https://storage.googleapis.com/${storageBucket.name}/merch/item/${itemId}/${mediaObject.fileName}`,
 
         colorOption: mediaObject.colorOption,
         type: mediaObject.type,

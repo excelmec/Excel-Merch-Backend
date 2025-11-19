@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../utils/prisma";
+import { CartItem } from "@prisma/client";
 import {
   AdditionalOrderCharges,
   OrderStatus,
@@ -18,7 +19,6 @@ import { Orders } from "razorpay/dist/types/orders";
 
 interface SelfPickupRequest {
   selfPickup: boolean;
-  isPreorder: boolean; //isPreorder flag to bypass stock check for pre-order items and set appropriate status
   addressId: number;
 }
 export async function getUserCartItems(
@@ -69,7 +69,6 @@ interface AddToCartRequest {
   quantity: number;
   colorOption: string;
   sizeOption: Size;
- // isPreorder: boolean; //isPreorder flag to bypass stock check for pre-order items
 }
 
 export async function addItemToCart(
@@ -79,7 +78,7 @@ export async function addItemToCart(
 ) {
   try {
     const decodedUser = req.decodedToken!;
-    const { itemId, quantity, colorOption, sizeOption } = req.body; //isPreorder flag to bypass stock check for pre-order items
+    const { itemId, quantity, colorOption, sizeOption } = req.body;
 
     if (!itemId || !quantity || !colorOption || !sizeOption) {
       throw new BadRequestError(
@@ -265,7 +264,7 @@ export async function checkoutController(
 ) {
   try {
     const decodedUser = req.decodedToken!;
-    const { selfPickup, isPreorder, addressId } = req.body;
+    const { selfPickup, addressId } = req.body;
     const userProfile = await prisma.user.findUnique({
       where: { id: decodedUser.user_id },
       include: {
@@ -330,33 +329,37 @@ export async function checkoutController(
       }
     }
 
-    //check stock only for non-preorder items
-    if (!isPreorder) {
-      const stockCounts = await prisma.stockCount.findMany({
-        where: {
-          itemId: {
-            in: userProfile.cartItems.map((cartItem) => cartItem.itemId),
-          },
+    const stockCounts = await prisma.stockCount.findMany({
+      where: {
+        itemId: {
+          in: userProfile.cartItems.map((cartItem) => cartItem.itemId),
         },
-      });
-      /**
-       * This will check if any item is out of stock
-       */
-      for (const cartItem of userProfile.cartItems) {
-        const stockCount = stockCounts.find(
-          (stockCount) =>
-            stockCount.itemId === cartItem.itemId &&
-            stockCount.colorOption === cartItem.colorOption &&
-            stockCount.sizeOption === cartItem.sizeOption
+      },
+    });
+    /**
+     * This will check if any item is out of stock
+     */
+    let isPreorder = false;
+    let preorderedItems: CartItem[] = []
+    for (const cartItem of userProfile.cartItems) {
+      const stockCount = stockCounts.find(
+        (stockCount) =>
+          stockCount.itemId === cartItem.itemId &&
+          stockCount.colorOption === cartItem.colorOption &&
+          stockCount.sizeOption === cartItem.sizeOption
+      );
+
+      if (!stockCount) {
+        throw new InternalServerError(
+          "Item Stock for this color and size not found"
         );
+      }
 
-        if (!stockCount) {
-          throw new InternalServerError(
-            "Item Stock for this color and size not found"
-          );
-        }
-
-        if (stockCount.count < cartItem.quantity) {
+      if (stockCount.count < cartItem.quantity) {
+        if (cartItem.item.canBePreordered) {
+          isPreorder = true;
+          preorderedItems.push(cartItem)
+        } else {
           throw new BadRequestError(
             `Not enough stock for itemId: ${cartItem.itemId}. Requested: ${cartItem.quantity}, Available: ${stockCount.count}`
           );
@@ -444,9 +447,9 @@ export async function checkoutController(
               colorOption: cartItem.colorOption,
               sizeOption: cartItem.sizeOption,
               price: cartItem.item.price,
+              isPreorder: preorderedItems.includes(cartItem)
             })),
           },
-          isPreorder: isPreorder,
 
           additionalCharges: {
             create: additionalCharges,

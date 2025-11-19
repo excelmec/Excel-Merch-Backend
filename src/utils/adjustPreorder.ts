@@ -8,12 +8,12 @@ export async function adjustPreorders(itemId: number) {
       // 1. Get all preorders for this item, oldest first
       const preorders = await tx.order.findMany({
         where: {
-          isPreorder: true,
           orderStatus: {
             in: [OrderStatus.pre_ordered, OrderStatus.partially_fullfilled],
           },
           orderItems: {
             some: {
+              isPreorder: true,
               itemId,
               // Only consider items that aren't fully fulfilled
               fulfilledQuantity: { lt: prisma.orderItem.fields.quantity },
@@ -95,10 +95,9 @@ export async function adjustPreorders(itemId: number) {
           }
         }
 
-        // Update order status
         const newStatus = fullyFulfilled
-          ? OrderStatus.order_confirmed
-          : OrderStatus.partially_fullfilled;
+            ? OrderStatus.order_confirmed
+            : OrderStatus.pre_ordered
 
         await tx.order.update({
           where: { orderId: order.orderId },

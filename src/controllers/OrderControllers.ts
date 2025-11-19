@@ -144,17 +144,14 @@ export async function cancelOrder(
 
     	// checking order status and payment status to allow cancellation 
     	if (
-      	(order.isPreorder && order.orderStatus === OrderStatus.pre_ordered) ||
-      	(
-      	  	order.paymentStatus === PaymentStatus.payment_pending &&
-      	  	order.orderStatus === OrderStatus.order_unconfirmed &&
-      	  	(
-      	  	  (!order.isSelfPickup &&
-      	  	    order.shippingStatus === ShippingStatus.not_shipped) ||
-      	  	  (order.isSelfPickup &&
-      	  	    order.selfpickupStatus === SelfpickupStatus.not_ready_for_pickup)
-      	  	)
-      	)
+					order.paymentStatus === PaymentStatus.payment_pending &&
+					order.orderStatus === OrderStatus.order_unconfirmed &&
+					(
+						(!order.isSelfPickup &&
+							order.shippingStatus === ShippingStatus.not_shipped) ||
+						(order.isSelfPickup &&
+							order.selfpickupStatus === SelfpickupStatus.not_ready_for_pickup)
+					)
      	) {
       	await prisma.order.update({
         	where: { orderId },

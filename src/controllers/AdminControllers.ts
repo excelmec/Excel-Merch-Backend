@@ -121,7 +121,9 @@ export async function getAllOrders(
 	try {
 		const orders = await prisma.order.findMany({
 			where: {
-				orderStatus: 'order_confirmed',
+				orderStatus: {
+          in: ['order_confirmed', 'pre_ordered'],
+        },
 			},
 			include: {
 				orderItems: true,

@@ -24,6 +24,8 @@ export interface ParsedItemRequestData {
   sizeOptions: Size[];
   colorOptions: string[];
 
+  canBePreordered: boolean;
+
   stockCount: Pick<stockCount, "colorOption" | "sizeOption" | "count">[];
   mediaObjects: MediaObjectRequest[];
 }
@@ -40,6 +42,7 @@ export async function createNewItemController(
     stockCount,
     sizeOptions,
     colorOptions,
+    canBePreordered,
     mediaObjects,
   } = req.body.data;
 
@@ -80,6 +83,7 @@ export async function createNewItemController(
           price,
           sizeOptions,
           colorOptions,
+          canBePreordered,
           stockCount: { create: stockCount },
         },
         include: {
@@ -156,6 +160,7 @@ export async function updateItemController(
       stockCount,
       sizeOptions,
       colorOptions,
+      canBePreordered,
       mediaObjects,
     } = req.body.data;
 
@@ -290,6 +295,7 @@ export async function updateItemController(
           price,
           sizeOptions: { set: sizeOptions },
           colorOptions: { set: colorOptions },
+          canBePreordered,
 
           stockCount: {
             create: stockCountToCreate,

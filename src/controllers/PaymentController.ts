@@ -243,7 +243,16 @@ async function orderPaid(reqPayload: IOrderPaidWebhookPayload): Promise<{
 				reqPayload,
 			});
 		}
-		if (order.isPreorder) {
+
+		let isPreorder = false;
+		for (const orderItem of order.orderItems) {
+			if (orderItem.isPreorder) {
+				isPreorder = true;
+				break;
+			}
+		}
+
+		if (isPreorder) {
 		  	await prisma.order.update({
 		    	where: { orderId: merchOrderId },
 		    	data: {
@@ -254,12 +263,16 @@ async function orderPaid(reqPayload: IOrderPaidWebhookPayload): Promise<{
 		  	});
 	  
 		  	logger.notice(`Preorder payment received for ${merchOrderId}`);
+
+				sendOrderConfirmationMail(
+					order.user.name,
+					order.totalAmountInRs,
+					merchOrderId,
+					order.user.email
+				);
 	  
 		  	return { message: "Preorder payment confirmed" };
-		}
-		
-
-		if (
+		} else if (
 			order.orderStatus === OrderStatus.order_unconfirmed &&
 			order.paymentStatus === PaymentStatus.payment_pending
 		) {

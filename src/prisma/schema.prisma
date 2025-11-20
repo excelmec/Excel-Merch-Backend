@@ -27,6 +27,7 @@ model User {
 model Address {
   id          Int    @id @default(autoincrement())
   
+  name        String?
   phoneNumber String?
   city        String
   house       String

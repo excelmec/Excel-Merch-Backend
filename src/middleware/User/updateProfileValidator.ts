@@ -2,6 +2,12 @@ import { body } from 'express-validator';
 import { getValidator } from '../Validator';
 
 const updateProfileValidators = [
+    body('name')
+    .exists()
+    .withMessage('Name is required')
+    .isString()
+    .withMessage('Name must be a string'),
+
     body('phoneNumber')
     .exists()
     .withMessage('Phone number is required')

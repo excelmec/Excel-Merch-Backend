@@ -5,7 +5,7 @@ import { SelfpickupStatus, ShippingStatus } from '@prisma/client';
 import { sendShippingStartedMail } from '../utils/mailer';
 import { razorpay } from '../utils/razorpay';
 
-interface UpdateShippingStatusRequest {
+interface UpdateOrderStatusRequest {
 	selfpickupStatus?: SelfpickupStatus;
 	shippingStatus?: ShippingStatus;
 	trackingId?: string;
@@ -17,7 +17,7 @@ export async function updateOrderStatus(
 			orderId: string;
 		},
 		{},
-		UpdateShippingStatusRequest
+		UpdateOrderStatusRequest
 	>,
 	res: Response,
 	next: NextFunction

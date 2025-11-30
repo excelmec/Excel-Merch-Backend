@@ -8,6 +8,7 @@ export async function adjustPreorders(itemId: number) {
       // 1. Get all preorders for this item, oldest first
       const preorders = await tx.order.findMany({
         where: {
+          paymentStatus: "payment_received",
           orderStatus: {
             in: [OrderStatus.pre_ordered, OrderStatus.partially_fullfilled],
           },

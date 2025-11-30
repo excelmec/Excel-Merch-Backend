@@ -79,11 +79,13 @@ model Item {
 }
 
 enum Size {
+  XS
   S
   M
   L
   XL
   XXL
+  XXXL
 }
 
 enum MediaTypes {

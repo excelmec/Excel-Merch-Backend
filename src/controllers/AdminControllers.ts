@@ -124,6 +124,7 @@ export async function getAllOrders(
 				orderStatus: {
           in: ['order_confirmed', 'pre_ordered'],
         },
+				paymentStatus: 'payment_received'
 			},
 			include: {
 				orderItems: true,

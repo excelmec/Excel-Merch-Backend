@@ -58,7 +58,7 @@ cartRouter.get("/", isAuthenticated, getUserCartItems);
  *                 description: Color option of the item
  *               sizeOption:
  *                 type: string
- *                 enum: [S, M, L, XL, XXL]
+ *                 enum: [XS, S, M, L, XL, XXL, XXXL]
  *                 description: Size option of the item (must be one of the allowed sizes)
  *             required:
  *               - itemId

@@ -7,7 +7,7 @@ import {
 	MediaObjectRequest,
 } from '../../controllers/ItemControllers';
 
-export const sizes: Size[] = ['S', 'M', 'L', 'XL', 'XXL'];
+export const sizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 function noDuplicates(arr: string[]) {
 	if (arr.length === new Set(arr).size) {
 		return true;

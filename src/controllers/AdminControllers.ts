@@ -198,3 +198,57 @@ export async function getOrderAdmin(
 		next(err);
 	}
 }
+
+export async function getMissingStock(
+	req: Request,
+	res: Response,
+	next: NextFunction
+) {
+	try {
+		const preorderItems = await prisma.orderItem.findMany({
+			where: {
+				isPreorder: true,
+				quantity: { gt: prisma.orderItem.fields.fulfilledQuantity },
+				order: {
+					paymentStatus: 'payment_received',
+					orderStatus: 'pre_ordered'
+				}
+			},
+			select: {
+				itemId: true,
+				colorOption: true,
+				sizeOption: true,
+				quantity: true,
+				fulfilledQuantity: true,
+				item: {
+					select: { name: true }
+				}
+			}
+		});
+
+		const neededMap = new Map();
+
+		for (const oi of preorderItems) {
+			const key = `${oi.itemId}_${oi.colorOption}_${oi.sizeOption}`;
+			const needed = oi.quantity - oi.fulfilledQuantity;
+
+			if (!neededMap.has(key)) {
+				neededMap.set(key, {
+					itemId: oi.itemId,
+					itemName: oi.item.name,
+					colorOption: oi.colorOption,
+					sizeOption: oi.sizeOption,
+					neededQty: needed
+				});
+			} else {
+				neededMap.get(key).neededQty += needed;
+			}
+		}
+
+		res.json({
+			missingStock: Array.from(neededMap.values())
+		});
+	} catch (err) {
+			next(err);
+	}
+}

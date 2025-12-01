@@ -16,6 +16,7 @@ import {
   getAllOrders,
   getOrderAdmin,
   updateOrderStatus,
+  getMissingStock
 } from "../../controllers/AdminControllers";
 import { updateOrderStatusValidator } from "../../middleware/Admin/updateOrderStatusValidator";
 
@@ -159,6 +160,20 @@ adminRouter.delete(
  *         description: Success
  */
 adminRouter.get("/orders", isAuthenticated, isMerchOrderManager, getAllOrders);
+
+/**
+ * @swagger
+ * /admin/missingStock:
+ *   get:
+ *     summary: Get missing stock details, needed to complete preorders
+ *     tags: [Admin]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Success
+ */
+adminRouter.get("/missingStock", isAuthenticated, isMerchOrderManager, getMissingStock);
 
 /**
  * @swagger

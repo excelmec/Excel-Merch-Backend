@@ -180,7 +180,6 @@ enum OrderStatus {
   order_cancelled_by_user
   order_cancelled_insufficient_stock
   pre_ordered
-  partially_fullfilled
 }
 
 enum PaymentStatus {

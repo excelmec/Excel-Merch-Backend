@@ -9,9 +9,7 @@ export async function adjustPreorders(itemId: number) {
       const preorders = await tx.order.findMany({
         where: {
           paymentStatus: "payment_received",
-          orderStatus: {
-            in: [OrderStatus.pre_ordered, OrderStatus.partially_fullfilled],
-          },
+          orderStatus: OrderStatus.pre_ordered,
           orderItems: {
             some: {
               isPreorder: true,

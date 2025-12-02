@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
 import { BadRequestError, NotFoundError } from '../utils/error';
-import { SelfpickupStatus, ShippingStatus } from '@prisma/client';
+import { SelfpickupStatus, ShippingStatus, Size } from '@prisma/client';
 import { sendShippingStartedMail } from '../utils/mailer';
 import { razorpay } from '../utils/razorpay';
 
@@ -10,6 +10,11 @@ interface UpdateOrderStatusRequest {
 	shippingStatus?: ShippingStatus;
 	trackingId?: string;
 }
+
+const sizeOrder = Object.values(Size).reduce((map, size, index) => {
+	map[size] = index;
+	return map;
+}, {} as Record<string, number>);
 
 export async function updateOrderStatus(
 	req: Request<
@@ -254,7 +259,7 @@ export async function getMissingStock(
 				return a.colorOption.localeCompare(b.colorOption);
 			}
 
-			return a.sizeOption.localeCompare(b.sizeOption);
+			return sizeOrder[a.sizeOption] - sizeOrder[b.sizeOption];
 		});
 
 		res.json({

@@ -245,8 +245,20 @@ export async function getMissingStock(
 			}
 		}
 
+		const missingStock = Array.from(neededMap.values()).sort((a, b) => {
+			if (a.itemName !== b.itemName) {
+				return a.itemName.localeCompare(b.itemName);
+			}
+
+			if (a.colorOption !== b.colorOption) {
+				return a.colorOption.localeCompare(b.colorOption);
+			}
+
+			return a.sizeOption.localeCompare(b.sizeOption);
+		});
+
 		res.json({
-			missingStock: Array.from(neededMap.values())
+			missingStock
 		});
 	} catch (err) {
 			next(err);

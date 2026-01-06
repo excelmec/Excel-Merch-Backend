@@ -29,6 +29,64 @@ export async function getOrderConfirmationHTML(
 	return html;
 }
 
+export async function getOrderCompletedHTML(
+  	userName: string,
+  	orderId: string
+){
+  	const bodyTextRow1 = `
+    	<p style="font-size: 14px; line-height: 170%;">
+      		Your order with ID <b>${orderId}</b> has been successfully completed.
+    	</p>
+  	`;
+
+  	const bodyTextRow2 = `
+    	<p style="font-size: 14px; line-height: 170%;">
+      		Thank you for supporting <b>Excel MEC</b>
+    	</p>
+  	`;
+
+  	const mainHeader = `Thank You for Your Support!`;
+  	const dateText = new Date().toLocaleString('en-IN', {
+  	  	timeZone: 'Asia/Kolkata',
+  	  	day: 'numeric',
+  	  	month: 'short',
+  	  	year: 'numeric',
+  	});
+
+  	const bodyHeader = `Hi ${userName}!`;
+  	const bodyText = `${bodyTextRow1}\n${bodyTextRow2}`;
+
+  	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
+
+  	return rawHtml
+  	  	.replace('{{MAIN_HEADER}}', mainHeader)
+  	  	.replace('{{DATE}}', dateText)
+  	  	.replace('{{BODY_HEADER}}', bodyHeader)
+  	  	.replace('{{BODY_TEXT}}', bodyText);
+}
+
+export async function getReadyForPickupHTML(
+  	userName: string,
+  	orderId: string
+) {
+  	const bodyText = `
+  	  	<p style="font-size: 14px; line-height: 170%;">
+  	    	Your order with ID <b>${orderId}</b> is ready for pickup.
+  	  	</p>
+  	  	<p style="font-size: 14px; line-height: 170%;">
+  	    	Please collect it from Front Desk.
+  	  	</p>
+  		`;
+
+  	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
+
+  	return rawHtml
+  	  	.replace('{{MAIN_HEADER}}', 'Order Ready for Pickup')
+  	  	.replace('{{DATE}}', new Date().toLocaleDateString('en-IN'))
+  	  	.replace('{{BODY_HEADER}}', `Hi ${userName}!`)
+  	  	.replace('{{BODY_TEXT}}', bodyText);
+}
+
 export async function getRefundConfirmationHTML(
 	userName: string,
 	totalAmt: number,

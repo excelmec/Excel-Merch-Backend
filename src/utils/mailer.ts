@@ -3,7 +3,7 @@ import SMTPPool from 'nodemailer/lib/smtp-pool';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { SMTP_HOST, SMTP_PORT } from './env';
 import { logger } from './logger';
-import { getOrderConfirmationHTML, getRefundConfirmationHTML, getShippingStartedHTML } from './mailTemplates';
+import { getOrderConfirmationHTML, getRefundConfirmationHTML, getShippingStartedHTML , getOrderCompletedHTML , getReadyForPickupHTML} from './mailTemplates';
 
 interface MailerOpts {
 	defaultFrom: string;
@@ -169,8 +169,45 @@ export async function sendShippingStartedMail(
 
 		const emailSubject = `Shipping Started`;
 
+		logger.info('Sending shipping started mail to ');
+
 		return mailer.sendMail(userEmail, emailSubject, emailHtml);
 	} catch (err) {
 		logger.error('Error while sending shipping started mail');
 	}
+}
+
+
+export async function sendReadyForPickupMail(
+    userName: string,
+  	orderId: string,
+  	userEmail: string
+) {
+  	const html = await getReadyForPickupHTML(userName, orderId);
+
+  	const emailSubject = 'Your order is ready for pickup';
+
+	logger.info('Sending ready for pickup mail to ');
+
+  	return mailer.sendMail(
+    	userEmail,
+    	emailSubject,
+    	html
+  	);
+}
+
+export async function sendOrderCompletedMail(
+  	userName: string,
+  	orderId: string,
+  	userEmail: string
+) {
+  	const html = await getOrderCompletedHTML(userName, orderId);
+	
+  	const emailSubject = 'Thank you for supporting Excel MEC'
+
+  	return mailer.sendMail(
+  	  	userEmail,
+  	  	emailSubject,
+  	  	html
+  	);
 }

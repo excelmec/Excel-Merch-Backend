@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
 import { BadRequestError, NotFoundError } from '../utils/error';
-import { SelfpickupStatus, ShippingStatus, Size } from '@prisma/client';
-import { sendShippingStartedMail } from '../utils/mailer';
+import { OrderStatus, SelfpickupStatus, ShippingStatus, Size } from '@prisma/client';
+import { sendShippingStartedMail ,sendReadyForPickupMail, sendOrderCompletedMail} from '../utils/mailer';
 import { razorpay } from '../utils/razorpay';
 
 interface UpdateOrderStatusRequest {
@@ -60,15 +60,35 @@ export async function updateOrderStatus(
   			    'Order status must be confirmed and payment must be received to update self-pickup status'
   			  );
   			}
-			// update selfpickup status
-  			const updatedOrder = await prisma.order.update({
-  			  where: { orderId },
-  			  data: { selfpickupStatus: selfpickupStatus },
-  			});
-		
+
+			const previousStatus = order.selfpickupStatus;
+
+            const updatedOrder = await prisma.order.update({
+                where: { orderId },
+                data: { selfpickupStatus },
+            });
+            
+            if (previousStatus !== selfpickupStatus) {
+                if (selfpickupStatus === SelfpickupStatus.ready_for_pickup) {
+                    await sendReadyForPickupMail(
+                  		order.user.name,
+                  		order.orderId,
+                  		order.user.email
+                	);
+              	}
+            
+            	if (selfpickupStatus === SelfpickupStatus.picked_up) {
+            	    	await sendOrderCompletedMail(
+            	      	order.user.name,
+            	      order.orderId,
+            	      order.user.email
+            	    );
+            	}
+            }
+            
   			return res.status(200).json({
-  			  order: updatedOrder,
-  			  message: 'Self-pickup status updated successfully',
+  			  	order: updatedOrder,
+  			  	message: 'Self-pickup status updated successfully',
   			});
 		} else {
 			/**
@@ -83,30 +103,35 @@ export async function updateOrderStatus(
 			);
 		}
 
-		if (
-			order.shippingStatus !== ShippingStatus.shipping &&
-			shippingStatus === ShippingStatus.shipping
-		) {
-			/**
-			 * When admin sets shipping status to shipping, send mail to user
-			 * with tracking id if present
-			 */
-			sendShippingStartedMail(
-				order.user.name,
-				order.orderId,
-				order.user.email,
-				trackingId
-			);
-		}
+		const previousShippingStatus = order.shippingStatus;
 
-		const updatedOrder = await prisma.order.update({
-			where: { orderId: orderId },
-			data: {
-				shippingStatus,
-				trackingId,
-			},
-		});
-		
+        const updatedOrder = await prisma.order.update({
+           where: { orderId },
+           data: {
+            shippingStatus,
+            trackingId,
+           },
+        });
+        
+        
+        if (previousShippingStatus !== shippingStatus) {
+          	if (shippingStatus === ShippingStatus.shipping) {
+          	  	await sendShippingStartedMail(
+          	    	order.user.name,
+          	    	order.orderId,
+          	    	order.user.email,
+          	    	trackingId
+          	  	);
+          	}
+        
+        	if (shippingStatus === ShippingStatus.delivered) {
+            	await sendOrderCompletedMail(
+              		order.user.name,
+              		order.orderId,
+              		order.user.email
+        		);
+          	}
+        }
 		return res.status(200).json({
 			order: updatedOrder,
 			message: 'Order status updated successfully',

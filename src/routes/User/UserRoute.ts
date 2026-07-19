@@ -79,7 +79,7 @@ userRouter.use("/cart", cartRouter);
 /**
  * @swagger
  * /user/orders:
- *   post:
+ *   get:
  *     summary: Get the authenticated user's order history
  *     tags: [User]
  *     security:
@@ -93,7 +93,7 @@ userRouter.get("/orders", isAuthenticated, getOrders);
 /**
  * @swagger
  * /user/orders/{orderId}:
- *   post:
+ *   get:
  *     summary: Get a specific order by ID
  *     tags: [User]
  *     security:

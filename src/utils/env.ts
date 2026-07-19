@@ -19,11 +19,23 @@ if (!process.env.DATABASE_URL) {
 }
 export const DATABASE_URL = process.env.DATABASE_URL;
 
-if (!process.env.GOOGLE_CLOUD_KEY_BASE64) {
-	console.error('fatal: GOOGLE_CLOUD_KEY_BASE64 not set in env');
+if (!process.env.BACKBLAZE_B2_KEY_ID) {
+	console.error('fatal: BACKBLAZE_B2_KEY_ID not set in env');
 	process.exit(1);
 }
-export const GOOGLE_CLOUD_KEY_BASE64 = process.env.GOOGLE_CLOUD_KEY_BASE64;
+export const BACKBLAZE_B2_KEY_ID = process.env.BACKBLAZE_B2_KEY_ID;
+
+if (!process.env.BACKBLAZE_B2_APPLICATION_KEY) {
+	console.error('fatal: BACKBLAZE_B2_APPLICATION_KEY not set in env');
+	process.exit(1);
+}
+export const BACKBLAZE_B2_APPLICATION_KEY = process.env.BACKBLAZE_B2_APPLICATION_KEY;
+
+if (!process.env.BACKBLAZE_B2_ENDPOINT) {
+	console.error('fatal: BACKBLAZE_B2_ENDPOINT not set in env');
+	process.exit(1);
+}
+export const BACKBLAZE_B2_ENDPOINT = process.env.BACKBLAZE_B2_ENDPOINT;
 
 if (!process.env.BUCKET_NAME) {
 	console.error('fatal: BUCKET_NAME not set in env');

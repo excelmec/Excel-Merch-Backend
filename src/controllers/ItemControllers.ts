@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { adjustPreorders } from "../utils/adjustPreorder";
 import { MediaObject, Size, stockCount } from "@prisma/client";
-import { s3Client, BUCKET_NAME } from "../utils/storage";
-import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { BACKBLAZE_B2_ENDPOINT } from "../utils/env";
+import { storageBucket, BUCKET_NAME } from "../utils/storage";
 import { v4 as uuidv4 } from "uuid";
 import { NotFoundError } from "../utils/error";
 import lodash from "lodash";
@@ -101,7 +99,7 @@ export async function createNewItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObject.id,
           itemId: itemId,
-          url: `https://${BUCKET_NAME}.${BACKBLAZE_B2_ENDPOINT}/merch/item/${itemId}/${mediaObject.id}`,
+          url: `https://storage.googleapis.com/${BUCKET_NAME}/merch/item/${itemId}/${mediaObject.id}`,
         })
       );
       const mediaObjectsCreateRes = await prismaTxClient.mediaObject.createMany(
@@ -128,14 +126,9 @@ export async function createNewItemController(
     const uploadPromises: Promise<any>[] = [];
     for (const mediaFile of mediaFiles) {
       uploadPromises.push(
-        s3Client.send(
-          new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: `merch/item/${newItem.id}/${mediaFile.originalname}`,
-            Body: mediaFile.buffer,
-            ContentType: mediaFile.mimetype,
-          })
-        )
+        storageBucket.file(`merch/item/${newItem.id}/${mediaFile.originalname}`).save(mediaFile.buffer, {
+          contentType: mediaFile.mimetype,
+        })
       );
     }
 
@@ -203,7 +196,7 @@ export async function updateItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObjectId,
           // itemId: itemId,
-          url: `https://${BUCKET_NAME}.${BACKBLAZE_B2_ENDPOINT}/merch/item/${itemId}/${mediaObjectId}`,
+          url: `https://storage.googleapis.com/${BUCKET_NAME}/merch/item/${itemId}/${mediaObjectId}`,
         });
 
         const mediaFileIndex = mediaFiles.findIndex(
@@ -223,7 +216,7 @@ export async function updateItemController(
       mediaObjectsToUpdate.push({
         id: oldItemMediaObject.id,
         itemId: itemId,
-        url: `https://${BUCKET_NAME}.${BACKBLAZE_B2_ENDPOINT}/merch/item/${itemId}/${mediaObject.fileName}`,
+        url: `https://storage.googleapis.com/${BUCKET_NAME}/merch/item/${itemId}/${mediaObject.fileName}`,
 
         colorOption: mediaObject.colorOption,
         type: mediaObject.type,
@@ -357,25 +350,15 @@ export async function updateItemController(
       }
 
       uploadDeletePromises.push(
-        s3Client.send(
-          new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: `merch/item/${itemId}/${mediaObjectToCreate.id}`,
-            Body: mediaFile.buffer,
-            ContentType: mediaFile.mimetype,
-          })
-        )
+        storageBucket.file(`merch/item/${itemId}/${mediaObjectToCreate.id}`).save(mediaFile.buffer, {
+          contentType: mediaFile.mimetype,
+        })
       );
     }
 
     for (const mediaObjectToDelete of mediaObjectsToDelete) {
       uploadDeletePromises.push(
-        s3Client.send(
-          new DeleteObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: `merch/item/${itemId}/${mediaObjectToDelete.id}`,
-          })
-        )
+        storageBucket.file(`merch/item/${itemId}/${mediaObjectToDelete.id}`).delete()
       );
     }
 
@@ -427,9 +410,9 @@ export async function deleteItemController(
       },
     });
 
-    // await storageBucket.deleteFiles({
-    // 	prefix: `${itemId}/`,
-    // });
+    await storageBucket.deleteFiles({
+      prefix: `merch/item/${itemId}/`,
+    });
 
     return res.json({ message: "Item deleted successfully" });
   } catch (err) {

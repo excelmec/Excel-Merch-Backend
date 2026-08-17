@@ -1,187 +1,118 @@
-<!-- Modern Email Template for Excel Merch -->
-<!-- Variables: MAIN_HEADER, DATE, BODY_HEADER, BODY_TEXT -->
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-<!--[if gte mso 9]>
-<xml>
-  <o:OfficeDocumentSettings>
-    <o:AllowPNG/>
-    <o:PixelsPerInch>96</o:PixelsPerInch>
-  </o:OfficeDocumentSettings>
-</xml>
-<![endif]-->
+  <!--[if gte mso 9]>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <![endif]-->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="x-apple-disable-message-reformatting">
-  <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
   <title>Excel Merch</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;500;600&family=Playball&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
   <style type="text/css">
-    @media only screen and (min-width: 620px) {
-      .u-row {
-        width: 600px !important;
-      }
-      .u-row .u-col {
-        vertical-align: top;
-      }
-      .u-row .u-col-100 {
-        width: 600px !important;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .u-row-container {
-        max-width: 100% !important;
-        padding-left: 0px !important;
-        padding-right: 0px !important;
-      }
-      .u-row .u-col {
-        min-width: 320px !important;
-        max-width: 100% !important;
-        display: block !important;
-      }
-      .u-row {
-        width: 100% !important;
-      }
-      .u-col {
-        width: 100% !important;
-      }
-      .u-col > div {
-        margin: 0 auto;
-      }
-      .mobile-padding {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-      }
-      .mobile-text-center {
-        text-align: center !important;
-      }
-    }
-
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      background-color: #0F1E28; /* Premium Dark Theme Background */
+      font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-
     table, tr, td {
       vertical-align: top;
       border-collapse: collapse;
     }
-
-    p {
-      margin: 0;
+    .main-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     }
-
-    .ie-container table,
-    .mso-container table {
-      table-layout: fixed;
-    }
-
-    * {
-      line-height: inherit;
-    }
-
-    a[x-apple-data-detectors='true'] {
-      color: inherit !important;
-      text-decoration: none !important;
-    }
-
-    /* Modern gradient header */
-    .gradient-bg {
-      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-    }
-
-    /* Card shadow effect */
-    .card-shadow {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Button styles */
-    .modern-button {
-      background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
-      border-radius: 8px;
-      padding: 14px 32px;
-      color: #000000;
-      text-decoration: none;
-      font-weight: 600;
+    /* Buttons */
+    .btn {
       display: inline-block;
-      transition: all 0.3s ease;
+      background-color: #5A1E47; /* Theme Magenta Accent */
+      color: #ffffff;
+      text-decoration: none;
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
     }
-
-    .modern-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
+    .btn:hover {
+      background-color: #7A2861;
     }
-
-    /* Social icons */
-    .social-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(212, 175, 55, 0.15);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 8px;
-      transition: all 0.3s ease;
+    /* Social Icons */
+    .social-icon img {
+      width: 32px;
+      height: 32px;
+      display: block;
+      transition: opacity 0.3s ease;
     }
-
-    .social-icon:hover {
-      background: rgba(212, 175, 55, 0.3);
-      transform: translateY(-2px);
+    .social-icon:hover img {
+      opacity: 0.8;
+    }
+    
+    @media (max-width: 620px) {
+      .main-container {
+        border-radius: 0;
+      }
     }
   </style>
-
 </head>
 
-<body style="margin: 0; padding: 0; background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); padding: 40px 0;">
+<body style="margin: 0; padding: 0; background-color: #0F1E28;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #0F1E28; padding: 50px 0;">
     <tr>
       <td align="center">
-        <!-- Main Container -->
-        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 48px rgba(212, 175, 55, 0.2), 0 4px 16px rgba(0, 0, 0, 0.12);">
+        
+        <table class="main-container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.25);">
           
-          <!-- Header Section with Gradient -->
+          <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); padding: 55px 50px 58px; text-align: center; border-bottom: 1px solid #D4AF37;">
-              <!-- Logo/Icon -->
+            <td style="padding: 40px 50px 20px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td align="center" style="padding-bottom: 32px;">
-                    <img src="https://storage.googleapis.com/excel-mec-static-25/resources/LogoWithTextTransparent.png" alt="Excel Merch" style="width: 100px; height: auto; display: block; margin: 0 auto; opacity: 0.95;" />
+                  <td align="left" style="vertical-align: middle;">
+                    <p style="margin: 0; color: #5A1E47; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
+                      {{DATE}}
+                    </p>
+                  </td>
+                  <td align="right" style="vertical-align: middle;">
+                    <img src="../../../../assets/logotext.png" alt="Excel Merch" style="height: 36px; width: auto; display: block;" />
                   </td>
                 </tr>
               </table>
-              
-              <!-- Main Header -->
-              <h1 style="margin: 0; padding: 0; color: #FFD700; font-family: 'Playfair Display', Georgia, serif; font-size: 42px; font-weight: 700; line-height: 1.15; letter-spacing: 1px;">
-                {{MAIN_HEADER}}
-              </h1>
-              
-              <!-- Date -->
-              <p style="margin: 22px 0 0 0; padding: 0; color: #D4AF37; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase;">
-                {{DATE}}
-              </p>
             </td>
           </tr>
 
-          <!-- Body Content Section -->
+          <!-- Hero Section -->
           <tr>
-            <td style="padding: 55px 50px 60px; background: #ffffff;">
-              <!-- Body Header -->
-              <h2 style="margin: 0 0 28px 0; padding: 0; color: #1a1a1a; font-family: 'Playball', cursive; font-size: 28px; font-weight: 700; line-height: 1.3; letter-spacing: 0.2px;">
+            <td style="padding: 20px 50px 40px;">
+              <h1 style="margin: 0 0 16px 0; color: #0F1E28; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 34px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px;">
+                {{MAIN_HEADER}}
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Body Text -->
+          <tr>
+            <td style="padding: 0 50px 50px;">
+              <h2 style="margin: 0 0 20px 0; color: #0F1E28; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 22px; font-weight: 700; line-height: 1.3;">
                 {{BODY_HEADER}}
               </h2>
-              
-              <!-- Body Text -->
-              <div style="margin: 0; padding: 0; color: #3a3a3a; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; line-height: 1.8; font-weight: 400; letter-spacing: 0.2px;">
+              <div style="color: #4A5568; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 16px; line-height: 1.6; font-weight: 400;">
                 {{BODY_TEXT}}
               </div>
             </td>
@@ -190,79 +121,57 @@
           <!-- Divider -->
           <tr>
             <td style="padding: 0 50px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="height: 2px; background: linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,0.3) 50%, rgba(212,175,55,0) 100%);"></td>
-                </tr>
-              </table>
+              <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 0;" />
             </td>
           </tr>
 
-          <!-- Help Section -->
+          <!-- Need Help -->
           <tr>
-            <td style="padding: 50px 50px 55px; background: #ffffff; text-align: center;">
-              <h3 style="margin: 0 0 16px 0; padding: 0; color: #1a1a1a; font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: 0.3px;">
-                Need Help?
+            <td style="padding: 50px; background-color: #FAFAFA; text-align: center;">
+              <h3 style="margin: 0 0 12px 0; color: #0F1E28; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 20px; font-weight: 700;">
+                Need Assistance?
               </h3>
-              
-              <p style="margin: 0 0 32px 0; padding: 0; color: #5a5a5a; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; line-height: 1.6; letter-spacing: 0.3px;">
-                Our dedicated team is at your service
+              <p style="margin: 0 0 24px 0; color: #64748B; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 15px; line-height: 1.5;">
+                Our dedicated support team is here to help you with any questions.
               </p>
-              
-              <!-- Contact Button -->
-              <a href="mailto:merch@excelmec.org?subject=Support%20Request%3A%20Excel%20Merchandise" style="display: inline-block; background: #000000; color: #FFD700; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; font-weight: 600; text-decoration: none; padding: 16px 42px; border-radius: 4px; letter-spacing: 1.2px; text-transform: uppercase; border: 1px solid #D4AF37;">
-                Contact Us
+              <a href="mailto:merch@excelmec.org?subject=Support%20Request%3A%20Excel%20Merchandise" class="btn" style="display: inline-block; background-color: #5A1E47; color: #ffffff; text-decoration: none; padding: 16px 36px; border-radius: 8px; font-family: 'Google Sans', 'Inter', sans-serif; font-weight: 700; font-size: 14px;">
+                Contact Support
               </a>
             </td>
           </tr>
 
-          <!-- Footer Section -->
+          <!-- Footer -->
           <tr>
-            <td style="background: linear-gradient(135deg, #0d0d0d 0%, #000000 100%); padding: 45px 50px 38px; text-align: center; border-top: 1px solid #D4AF37;">
-              <!-- Social Media Icons -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <td style="background-color: #0F1E28; padding: 50px; text-align: center; border-top: 2px solid #5A1E47;">
+              
+              <!-- Real Social Icons -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 35px;">
                 <tr>
-                  <td align="center" style="padding-bottom: 32px;">
+                  <td align="center">
                     <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block;">
                       <tr>
-                        <td style="padding: 0 10px;">
-                          <a href="https://www.instagram.com/excelmec/" target="_blank" style="display: inline-block; width: 42px; height: 42px; background: rgba(212, 175, 55, 0.12); border-radius: 50%; text-align: center; line-height: 42px; border: 1px solid rgba(212, 175, 55, 0.4); opacity: 0.9; transition: opacity 0.3s ease;">
-                            <img
-                              src="https://storage.googleapis.com/excel-mec-static-25/resources/Instagram.png"
-                              width="20"
-                              alt="Instagram"
-                              style="display:block;margin:11px auto 0;border:0;height:auto;"
-                            >
+                        <!-- Instagram -->
+                        <td style="padding: 0 12px;">
+                          <a href="https://www.instagram.com/excelmec/" target="_blank" class="social-icon">
+                            <img src="https://img.icons8.com/color/48/000000/instagram-new--v1.png" width="32" height="32" alt="Instagram" style="display:block;border:0;height:32px;width:32px;">
                           </a>
                         </td>
-                        <td style="padding: 0 10px;">
-                          <a href="https://www.linkedin.com/company/excelmec/" target="_blank" style="display: inline-block; width: 42px; height: 42px; background: rgba(212, 175, 55, 0.12); border-radius: 50%; text-align: center; line-height: 42px; border: 1px solid rgba(212, 175, 55, 0.4); opacity: 0.9; transition: opacity 0.3s ease;">
-                            <img
-                              src="https://storage.googleapis.com/excel-mec-static-25/resources/LinkedIn.png"
-                              width="20"
-                              alt="Instagram"
-                              style="display:block;margin:11px auto 0;border:0;height:auto;"
-                            >
+                        <!-- LinkedIn -->
+                        <td style="padding: 0 12px;">
+                          <a href="https://www.linkedin.com/company/excelmec/" target="_blank" class="social-icon">
+                            <img src="https://img.icons8.com/color/48/000000/linkedin.png" width="32" height="32" alt="LinkedIn" style="display:block;border:0;height:32px;width:32px;">
                           </a>
                         </td>
-                        <td style="padding: 0 10px;">
-                          <a href="https://www.facebook.com/excelmec" target="_blank" style="display: inline-block; width: 42px; height: 42px; background: rgba(212, 175, 55, 0.12); border-radius: 50%; text-align: center; line-height: 42px; border: 1px solid rgba(212, 175, 55, 0.4); opacity: 0.9; transition: opacity 0.3s ease;">
-                            <img
-                              src="https://storage.googleapis.com/excel-mec-static-25/resources/Facebook.png"
-                              width="20"
-                              alt="Instagram"
-                              style="display:block;margin:11px auto 0;border:0;height:auto;"
-                            >
+                        <!-- Facebook -->
+                        <td style="padding: 0 12px;">
+                          <a href="https://www.facebook.com/excelmec" target="_blank" class="social-icon">
+                            <img src="https://img.icons8.com/color/48/000000/facebook-new.png" width="32" height="32" alt="Facebook" style="display:block;border:0;height:32px;width:32px;">
                           </a>
                         </td>
-                        <td style="padding: 0 10px;">
-                          <a href="https://twitter.com/excelmec" target="_blank" style="display: inline-block; width: 42px; height: 42px; background: rgba(212, 175, 55, 0.12); border-radius: 50%; text-align: center; line-height: 42px; border: 1px solid rgba(212, 175, 55, 0.4); opacity: 0.9; transition: opacity 0.3s ease;">
-                            <img
-                              src="https://storage.googleapis.com/excel-mec-static-25/resources/X.png"
-                              width="20"
-                              alt="Instagram"
-                              style="display:block;margin:11px auto 0;border:0;height:auto;"
-                            >
+                        <!-- X (Twitter) -->
+                        <td style="padding: 0 12px;">
+                          <a href="https://twitter.com/excelmec" target="_blank" class="social-icon">
+                            <img src="https://img.icons8.com/ios-filled/48/ffffff/twitterx--v1.png" width="32" height="32" alt="X" style="display:block;border:0;height:32px;width:32px;">
                           </a>
                         </td>
                       </tr>
@@ -271,28 +180,25 @@
                 </tr>
               </table>
               
-              <!-- Footer Text -->
-              <p style="margin: 0; padding: 0 0 8px 0; color: #D4AF37; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; line-height: 1.6; font-weight: 500; letter-spacing: 0.8px;">
+              <p style="margin: 0 0 12px 0; color: #FFFFFF; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1px;">
                 MODEL ENGINEERING COLLEGE
               </p>
-              <p style="margin: 0; padding: 0 0 12px 0; color: #D4AF37; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; line-height: 1.6; font-weight: 400; letter-spacing: 0.5px; opacity: 0.85;">
+              <p style="margin: 0 0 24px 0; color: #94A3B8; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 14px; font-weight: 400;">
                 Thrikkakara · Kochi · Kerala 682021
               </p>
-              <p style="margin: 0; padding: 20px 0 0 0; color: #FFD700; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 12px; line-height: 1.5; opacity: 0.7; letter-spacing: 0.8px;">
-                © 2025 EXCEL MEC · ALL RIGHTS RESERVED
+              <p style="margin: 0; color: #64748B; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 13px; font-weight: 400;">
+                © 2026 EXCEL MEC · ALL RIGHTS RESERVED
               </p>
             </td>
           </tr>
 
         </table>
-        <!-- End Main Container -->
-
-        <!-- Bottom Spacing -->
+        
         <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%;">
           <tr>
-            <td style="padding: 28px 20px;">
-              <p style="margin: 0; text-align: center; color: #D4AF37; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 11px; opacity: 0.6; line-height: 1.5; letter-spacing: 0.8px;">
-                THIS MESSAGE WAS SENT TO YOU AS A VALUED EXCEL MERCH CLIENT
+            <td style="padding: 24px 20px;">
+              <p style="margin: 0; text-align: center; color: #64748B; font-family: 'Google Sans', 'Inter', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+                This message was sent to you as a valued Excel Merch client
               </p>
             </td>
           </tr>

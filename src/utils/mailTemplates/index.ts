@@ -69,12 +69,22 @@ export async function getReadyForPickupHTML(
   	userName: string,
   	orderId: string
 ) {
+  	const pickupDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', {
+  	  	day: 'numeric',
+  	  	month: 'long',
+  	  	year: 'numeric',
+  	  	timeZone: 'Asia/Kolkata',
+  	});
+
   	const bodyText = `
   	  	<p style="font-size: 14px; line-height: 170%;">
-  	    	Your order with ID <b>${orderId}</b> is ready for pickup.
+  	    	Your order with ID <b>${orderId}</b> has been updated to ready for pickup.
   	  	</p>
   	  	<p style="font-size: 14px; line-height: 170%;">
-  	    	Please collect it from Front Desk.
+  	    	Pickup date: <b>${pickupDate}</b>
+  	  	</p>
+  	  	<p style="font-size: 14px; line-height: 170%;">
+  	    	Please collect it from Front Desk. For any queries, contact Kripa Gopan at <b>+91 99465 35978</b>.
   	  	</p>
   		`;
 

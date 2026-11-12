@@ -1,0 +1,28 @@
+steps:
+  - id: Build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - asia-southeast1-docker.pkg.dev/production-513109/cloud-run-source-deploy/excel-merch-backend:$COMMIT_SHA
+      - .
+  - id: Push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - asia-southeast1-docker.pkg.dev/production-513109/cloud-run-source-deploy/excel-merch-backend:$COMMIT_SHA
+  - id: Deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - excel-merch-backend
+      - --project=production-513109
+      - --region=asia-southeast1
+      - --image=asia-southeast1-docker.pkg.dev/production-513109/cloud-run-source-deploy/excel-merch-backend:$COMMIT_SHA
+      - --update-env-vars=BUCKET_NAME=excel-2026-merch-static-513109,MERCH_PUBLIC_BASE_URL=https://excel-merch-backend-k6il4zcgua-as.a.run.app
+      - --quiet
+options:
+  logging: CLOUD_LOGGING_ONLY

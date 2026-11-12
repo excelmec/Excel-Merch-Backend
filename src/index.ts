@@ -14,6 +14,7 @@ import localtunnel from "localtunnel";
 import { webhookRouter } from "./routes/Webhook/webhook";
 import { logger } from "./utils/logger";
 import { cartRouter } from "./routes/User/CartRoutes";
+import { mediaRouter } from "./routes/MediaRoutes";
 
 const options = {
   definition: {
@@ -67,6 +68,7 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
 app.get("/ping", (req: express.Request, res: express.Response) => {
   res.status(200).json({ message: "pong", status: "OK" });
 });
+app.use("/media", mediaRouter);
 
 app.use("/user", userRouter);
 app.use("/item", itemRouter);

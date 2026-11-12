@@ -1,4 +1,10 @@
 import { readFile } from 'fs/promises';
+import { getLogoUrl } from '../mediaUrls';
+
+const withLogo = (html: string) => html.replace(
+  '{{LOGO_URL}}',
+  getLogoUrl(),
+);
 
 export async function getOrderConfirmationHTML(
 	userName: string,
@@ -20,7 +26,7 @@ export async function getOrderConfirmationHTML(
 
 	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
 
-	const html = rawHtml
+	const html = withLogo(rawHtml)
 		.replace('{{MAIN_HEADER}}', mainHeader)
 		.replace('{{DATE}}', dateText)
 		.replace('{{BODY_HEADER}}', bodyHeader)
@@ -58,7 +64,7 @@ export async function getOrderCompletedHTML(
 
   	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
 
-  	return rawHtml
+	return withLogo(rawHtml)
   	  	.replace('{{MAIN_HEADER}}', mainHeader)
   	  	.replace('{{DATE}}', dateText)
   	  	.replace('{{BODY_HEADER}}', bodyHeader)
@@ -90,7 +96,7 @@ export async function getReadyForPickupHTML(
 
   	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
 
-  	return rawHtml
+	return withLogo(rawHtml)
   	  	.replace('{{MAIN_HEADER}}', 'Order Ready for Pickup')
   	  	.replace('{{DATE}}', new Date().toLocaleDateString('en-IN'))
   	  	.replace('{{BODY_HEADER}}', `Hi ${userName}!`)
@@ -117,7 +123,7 @@ export async function getRefundConfirmationHTML(
 
 	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
 
-	const html = rawHtml
+	const html = withLogo(rawHtml)
 		.replace('{{MAIN_HEADER}}', mainHeader)
 		.replace('{{DATE}}', dateText)
 		.replace('{{BODY_HEADER}}', bodyHeader)
@@ -153,7 +159,7 @@ export async function getShippingStartedHTML(
 
 	const rawHtml = await readFile(`${__dirname}/index.html`, 'utf8');
 
-	const html = rawHtml
+	const html = withLogo(rawHtml)
 		.replace('{{MAIN_HEADER}}', mainHeader)
 		.replace('{{DATE}}', dateText)
 		.replace('{{BODY_HEADER}}', bodyHeader)

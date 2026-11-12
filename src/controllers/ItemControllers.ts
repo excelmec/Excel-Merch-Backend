@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { adjustPreorders } from "../utils/adjustPreorder";
 import { MediaObject, Size, stockCount } from "@prisma/client";
-import { storageBucket, BUCKET_NAME } from "../utils/storage";
+import { storageBucket } from "../utils/storage";
+import { getItemMediaUrl } from "../utils/mediaUrls";
 import { v4 as uuidv4 } from "uuid";
 import { NotFoundError } from "../utils/error";
 import lodash from "lodash";
@@ -99,7 +100,7 @@ export async function createNewItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObject.id,
           itemId: itemId,
-          url: `https://storage.googleapis.com/${BUCKET_NAME}/merch/item/${itemId}/${mediaObject.id}`,
+          url: getItemMediaUrl(itemId, mediaObject.id),
         })
       );
       const mediaObjectsCreateRes = await prismaTxClient.mediaObject.createMany(
@@ -196,7 +197,7 @@ export async function updateItemController(
           viewOrdering: mediaObject.viewOrdering,
           id: mediaObjectId,
           // itemId: itemId,
-          url: `https://storage.googleapis.com/${BUCKET_NAME}/merch/item/${itemId}/${mediaObjectId}`,
+          url: getItemMediaUrl(itemId, mediaObjectId),
         });
 
         const mediaFileIndex = mediaFiles.findIndex(
@@ -216,7 +217,7 @@ export async function updateItemController(
       mediaObjectsToUpdate.push({
         id: oldItemMediaObject.id,
         itemId: itemId,
-        url: `https://storage.googleapis.com/${BUCKET_NAME}/merch/item/${itemId}/${mediaObject.fileName}`,
+        url: getItemMediaUrl(itemId, mediaObject.fileName),
 
         colorOption: mediaObject.colorOption,
         type: mediaObject.type,

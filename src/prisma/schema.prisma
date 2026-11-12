@@ -132,6 +132,7 @@ model Order {
   shippingStatus ShippingStatus?
   isSelfPickup Boolean @default(false)
   selfpickupStatus SelfpickupStatus?
+  pickupPhoneNumber String?
 
   totalAmountInRs Float
   additionalCharges AdditionalOrderCharges[]

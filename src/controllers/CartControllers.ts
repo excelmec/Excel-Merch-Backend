@@ -20,6 +20,7 @@ import { Orders } from "razorpay/dist/types/orders";
 interface SelfPickupRequest {
   selfPickup: boolean;
   addressId: number;
+  pickupPhoneNumber?: string;
 }
 export async function getUserCartItems(
   req: Request,
@@ -264,7 +265,13 @@ export async function checkoutController(
 ) {
   try {
     const decodedUser = req.decodedToken!;
-    const { selfPickup, addressId } = req.body;
+    const { selfPickup, addressId, pickupPhoneNumber } = req.body;
+    const normalizedPickupPhoneNumber = typeof pickupPhoneNumber === "string"
+      ? pickupPhoneNumber.trim()
+      : undefined;
+    if (selfPickup && !/^[0-9]{10}$/.test(normalizedPickupPhoneNumber ?? "")) {
+      throw new BadRequestError("A 10-digit pickup contact number is required");
+    }
     const userProfile = await prisma.user.findUnique({
       where: { id: decodedUser.user_id },
       include: {
@@ -461,6 +468,7 @@ export async function checkoutController(
             : OrderStatus.order_unconfirmed,
           paymentStatus: PaymentStatus.payment_pending,
           isSelfPickup: selfPickup,
+          pickupPhoneNumber: selfPickup ? normalizedPickupPhoneNumber : null,
           selfpickupStatus: selfPickup
             ? SelfpickupStatus.not_ready_for_pickup
             : null,
